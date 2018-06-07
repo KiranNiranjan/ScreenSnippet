@@ -52,6 +52,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="InternalSnippet.cs" />
+    <Compile Include="LocaleUtil.cs" />
     <Compile Include="SnippingTool.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -65,6 +66,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Content Include="i18N\SnippingWindow.ja-JP.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Page Include="i18N\SnippingWindow.en-US.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SnippingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

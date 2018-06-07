@@ -39,8 +39,10 @@ namespace Paragon.Plugins.ScreenCapture
         private string outputFilename;
 
         // outputFileName: write output screen capture to given file name  
-        public SnippingWindow(string outputFilename)
+        public SnippingWindow(string outputFilename, string localeTag = "en-US")
         {
+
+            LocaleUtil.SwitchLanguage(this, localeTag);
             InitializeComponent();
 
             this.outputFilename = outputFilename;

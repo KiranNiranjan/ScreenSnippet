@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="ResourceDictionaryName">Loc-ja-JP</sys:String>
+
+    <sys:String x:Key="Title">タイトル</sys:String>
+    <sys:String x:Key="Pen">ペン</sys:String>
+    <sys:String x:Key="Highlight">ハイライト</sys:String>
+    <sys:String x:Key="Erase">消去する</sys:String>
+    <sys:String x:Key="Done">完了</sys:String>
+</ResourceDictionary>

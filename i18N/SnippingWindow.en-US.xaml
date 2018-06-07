@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="ResourceDictionaryName">Loc-en-US</sys:String>
+
+    <sys:String x:Key="Title">Title</sys:String>
+    <sys:String x:Key="Pen">Pen</sys:String>
+    <sys:String x:Key="Highlight">Highlight</sys:String>
+    <sys:String x:Key="Erase">Erase</sys:String>
+    <sys:String x:Key="Done">Done</sys:String>
+</ResourceDictionary>
