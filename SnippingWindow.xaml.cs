@@ -169,6 +169,18 @@ namespace Paragon.Plugins.ScreenCapture
                     encoder.Save(fileStream);
                 }
             }
+            catch (System.UnauthorizedAccessException ex)
+            {
+                throw new System.UnauthorizedAccessException(ex.ToString());
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new System.UnauthorizedAccessException(ex.ToString());
+            }
+            catch (IOException ex)
+            {
+                throw new System.UnauthorizedAccessException(ex.ToString());
+            }
             finally
             {
                 Close();

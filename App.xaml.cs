@@ -25,7 +25,7 @@ namespace ScreenSnippet
             }
             else
             {
-                throw new Exception("Missing filename command line argument.");
+                throw new System.ArgumentException("Missing filename command line argument.");
             }
         }
     }
