@@ -19,7 +19,7 @@ namespace ScreenSnippet
                 if (locale != null && availableLocale.Contains(locale))
                 {
                     System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(locale);
-                    System.Threading.Thread.CurrentThread.CultureInfo = new System.Globalization.CultureInfo(locale);
+                    System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(locale);
                 }
                 SnippingWindow win = new SnippingWindow(filename);
                 win.Show();
