@@ -18,6 +18,8 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Paragon.Plugins.ScreenCapture
@@ -50,28 +52,49 @@ namespace Paragon.Plugins.ScreenCapture
 
         internal static InternalSnippet TakeSnippet()
         {
-            var height = SystemInformation.VirtualScreen.Height;
-            var width = SystemInformation.VirtualScreen.Width;
-            var X = SystemInformation.VirtualScreen.X;
-            var Y = SystemInformation.VirtualScreen.Y;
-            var rectangle = new Rectangle(X, Y, width, height);
-
-            using (var bmp = new Bitmap(rectangle.Width, rectangle.Height, PixelFormat.Format32bppPArgb))
+            try
             {
-                using (var graphics = Graphics.FromImage(bmp))
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                var height = SystemInformation.VirtualScreen.Height;
+                var width = SystemInformation.VirtualScreen.Width;
+                var X = SystemInformation.VirtualScreen.X;
+                var Y = SystemInformation.VirtualScreen.Y;
+                var rectangle = new Rectangle(X, Y, width, height);
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(rectangle.ToString());
+                sb.AppendLine("Starting to create new bitmap");
+                File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                using (var bmp = new Bitmap(rectangle.Width, rectangle.Height, PixelFormat.Format32bppPArgb))
                 {
-                    using (var snipper = new SnippingTool(bmp, rectangle))
+                    sb.AppendLine("Graphics.FromImage converting bmp to graphic");
+                    File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                    using (var graphics = Graphics.FromImage(bmp))
                     {
-                        graphics.CopyFromScreen(X, Y, 0, 0, bmp.Size);
-
-                        if (snipper.ShowDialog() == DialogResult.OK)
+                        sb.AppendLine("opening SnippingTool window for editing");
+                        sb.AppendLine(bmp.Width.ToString());
+                        sb.AppendLine(bmp.Height.ToString());
+                        File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                        using (var snipper = new SnippingTool(bmp, rectangle))
                         {
-                            return new InternalSnippet(snipper.Image, snipper.SelectedRectangle);
-                        }
+                            graphics.CopyFromScreen(X, Y, 0, 0, bmp.Size);
 
-                        return null;
+                            if (snipper.ShowDialog() == DialogResult.OK)
+                            {
+                                return new InternalSnippet(snipper.Image, snipper.SelectedRectangle);
+                            }
+
+                            return null;
+                        }
                     }
                 }
+            }
+            catch (Exception err) {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Expection TakeSnippet");
+                sb.AppendLine(err.ToString());
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                return null;
             }
         }
 
@@ -123,14 +146,24 @@ namespace Paragon.Plugins.ScreenCapture
 
             // unbind so that the correct result is returned
             Deactivate -= OnSnippingToolDeactivate;
-
-            Image = new Bitmap(SelectedRectangle.Width, SelectedRectangle.Height);
-            using (var gr = Graphics.FromImage(Image))
+            try
             {
-                gr.DrawImage(base.BackgroundImage, new Rectangle(0, 0, Image.Width, Image.Height),
-                    SelectedRectangle, GraphicsUnit.Pixel);
+                Image = new Bitmap(SelectedRectangle.Width, SelectedRectangle.Height);
+                using (var gr = Graphics.FromImage(Image))
+                {
+                    gr.DrawImage(base.BackgroundImage, new Rectangle(0, 0, Image.Width, Image.Height),
+                        SelectedRectangle, GraphicsUnit.Pixel);
+                }
+                DialogResult = DialogResult.OK;
             }
-            DialogResult = DialogResult.OK;
+            catch (Exception err)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Expection TakeSnippet");
+                sb.AppendLine(err.ToString());
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                File.AppendAllText(desktopPath+ "\\screensnippetlogs.txt", sb.ToString());
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)

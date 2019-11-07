@@ -15,8 +15,10 @@
 //specific language governing permissions and limitations
 //under the License.
 
+using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -37,13 +39,17 @@ namespace Paragon.Plugins.ScreenCapture
         private DrawingAttributes selectedHighlightColor;
         private DrawingAttributes selectedPenColor;
         private string outputFilename;
+        private string logFilePath;
+        private StringBuilder sb;
 
         // outputFileName: write output screen capture to given file name  
-        public SnippingWindow(string outputFilename)
+        public SnippingWindow(string outputFilename, string logFilePath = "")
         {
             InitializeComponent();
 
             this.outputFilename = outputFilename;
+            this.logFilePath = logFilePath;
+            sb = new StringBuilder();
 
             penColors = ((DrawingAttributes[]) FindResource("PenColors"));
             highlightColors = ((DrawingAttributes[]) FindResource("HighlightColors"));
@@ -57,12 +63,15 @@ namespace Paragon.Plugins.ScreenCapture
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             var result = SnippingTool.TakeSnippet();
-
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            sb.AppendLine("TakeSnippet() returned result successfully");
             if (result == null)
             {
+                sb.AppendLine("TakeSnippet() result is null hence close");
                 Close();
                 return;
             }
+            sb.AppendLine("TakeSnippet() result is not null hence procuding to with calculation");
 
             WindowState = WindowState.Normal;
 
@@ -84,8 +93,10 @@ namespace Paragon.Plugins.ScreenCapture
             Left = left < screen.Left ? (screen.Left / dx) : (left / dx);
 
             var image = result.Image;
-
+            sb.AppendLine("ImageToBitmapSource() converting image to bitmap source");
             ImageBrush.ImageSource = result.ImageToBitmapSource();
+            sb.AppendLine("ImageToBitmapSource() completed converting image to bitmap source");
+            File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
 
             var width = 400;
             // adjust window size to be slightly larger than 

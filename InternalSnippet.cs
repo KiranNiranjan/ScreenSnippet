@@ -17,7 +17,9 @@
 
 using System;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
@@ -52,20 +54,36 @@ namespace Paragon.Plugins.ScreenCapture
         /// <returns></returns>
         public BitmapSource ImageToBitmapSource()
         {
-            var bitmap = new Bitmap(Image);
-            var bmpPt = bitmap.GetHbitmap();
-            var bitmapSource =
-                Imaging.CreateBitmapSourceFromHBitmap(
-                    bmpPt,
-                    IntPtr.Zero,
-                    Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
+            try
+            {
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("ImageToBitmapSource");
+                sb.AppendLine("converting image to bitmap source");
+                var bitmap = new Bitmap(Image);
+                var bmpPt = bitmap.GetHbitmap();
+                var bitmapSource =
+                    Imaging.CreateBitmapSourceFromHBitmap(
+                        bmpPt,
+                        IntPtr.Zero,
+                        Int32Rect.Empty,
+                        BitmapSizeOptions.FromEmptyOptions());
 
-            //freeze bitmapSource and clear memory to avoid memory leaks
-            bitmapSource.Freeze();
-            DeleteObject(bmpPt);
+                //freeze bitmapSource and clear memory to avoid memory leaks
+                bitmapSource.Freeze();
+                DeleteObject(bmpPt);
 
-            return bitmapSource;
+                return bitmapSource;
+            }
+            catch (Exception err)
+            {
+                StringBuilder sb = new StringBuilder();
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                sb.AppendLine("Exception in ImageToBitmapSource");
+                sb.AppendLine(err.ToString());
+                File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                return null;
+            }
         }
     }
 }
