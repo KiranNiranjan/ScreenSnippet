@@ -50,11 +50,10 @@ namespace Paragon.Plugins.ScreenCapture
 
         public Image Image { get; set; }
 
-        internal static InternalSnippet TakeSnippet()
+        internal static InternalSnippet TakeSnippet(string logFilePath)
         {
             try
             {
-                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 var height = SystemInformation.VirtualScreen.Height;
                 var width = SystemInformation.VirtualScreen.Width;
                 var X = SystemInformation.VirtualScreen.X;
@@ -63,17 +62,17 @@ namespace Paragon.Plugins.ScreenCapture
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine(rectangle.ToString());
                 sb.AppendLine("Starting to create new bitmap");
-                File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                File.AppendAllText(logFilePath, sb.ToString());
                 using (var bmp = new Bitmap(rectangle.Width, rectangle.Height, PixelFormat.Format32bppPArgb))
                 {
                     sb.AppendLine("Graphics.FromImage converting bmp to graphic");
-                    File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                    File.AppendAllText(logFilePath, sb.ToString());
                     using (var graphics = Graphics.FromImage(bmp))
                     {
                         sb.AppendLine("opening SnippingTool window for editing");
                         sb.AppendLine(bmp.Width.ToString());
                         sb.AppendLine(bmp.Height.ToString());
-                        File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                        File.AppendAllText(logFilePath, sb.ToString());
                         using (var snipper = new SnippingTool(bmp, rectangle))
                         {
                             graphics.CopyFromScreen(X, Y, 0, 0, bmp.Size);
@@ -92,8 +91,7 @@ namespace Paragon.Plugins.ScreenCapture
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("Expection TakeSnippet");
                 sb.AppendLine(err.ToString());
-                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                File.AppendAllText(logFilePath, sb.ToString());
                 return null;
             }
         }
@@ -159,9 +157,9 @@ namespace Paragon.Plugins.ScreenCapture
             catch (Exception err)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("Expection TakeSnippet");
+                sb.AppendLine("Expection OnMouseUp");
                 sb.AppendLine(err.ToString());
-                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 File.AppendAllText(desktopPath+ "\\screensnippetlogs.txt", sb.ToString());
             }
         }

@@ -13,6 +13,7 @@ namespace ScreenSnippet
 
             string filename = (e.Args.Length >= 1 && !string.IsNullOrEmpty(e.Args[0])) ? e.Args[0] : null;
             string locale = (e.Args.Length == 2 && !string.IsNullOrEmpty(e.Args[1])) ? e.Args[1] : null;
+            string logFilePath = (e.Args.Length == 3 && !string.IsNullOrEmpty(e.Args[2])) ? e.Args[2] : null;
 
             if (filename != null)
             {
@@ -20,7 +21,7 @@ namespace ScreenSnippet
                 {
                     System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(locale);
                 }
-                SnippingWindow win = new SnippingWindow(filename);
+                SnippingWindow win = new SnippingWindow(filename, logFilePath);
                 win.Show();
             }
             else

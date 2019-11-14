@@ -43,7 +43,7 @@ namespace Paragon.Plugins.ScreenCapture
         private StringBuilder sb;
 
         // outputFileName: write output screen capture to given file name  
-        public SnippingWindow(string outputFilename, string logFilePath = "")
+        public SnippingWindow(string outputFilename, string logFilePath)
         {
             InitializeComponent();
 
@@ -62,8 +62,7 @@ namespace Paragon.Plugins.ScreenCapture
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            var result = SnippingTool.TakeSnippet();
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var result = SnippingTool.TakeSnippet(this.logFilePath);
             sb.AppendLine("TakeSnippet() returned result successfully");
             if (result == null)
             {
@@ -94,9 +93,9 @@ namespace Paragon.Plugins.ScreenCapture
 
             var image = result.Image;
             sb.AppendLine("ImageToBitmapSource() converting image to bitmap source");
-            ImageBrush.ImageSource = result.ImageToBitmapSource();
+            ImageBrush.ImageSource = result.ImageToBitmapSource(this.logFilePath);
             sb.AppendLine("ImageToBitmapSource() completed converting image to bitmap source");
-            File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+            File.AppendAllText(this.logFilePath, sb.ToString());
 
             var width = 400;
             // adjust window size to be slightly larger than 

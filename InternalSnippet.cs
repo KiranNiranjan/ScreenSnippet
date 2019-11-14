@@ -52,14 +52,14 @@ namespace Paragon.Plugins.ScreenCapture
         /// Convert the Image to a BitmapSource.
         /// </summary>
         /// <returns></returns>
-        public BitmapSource ImageToBitmapSource()
+        public BitmapSource ImageToBitmapSource(string logFilePath)
         {
             try
             {
-                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("ImageToBitmapSource");
                 sb.AppendLine("converting image to bitmap source");
+                File.AppendAllText(logFilePath, sb.ToString());
                 var bitmap = new Bitmap(Image);
                 var bmpPt = bitmap.GetHbitmap();
                 var bitmapSource =
@@ -78,10 +78,9 @@ namespace Paragon.Plugins.ScreenCapture
             catch (Exception err)
             {
                 StringBuilder sb = new StringBuilder();
-                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 sb.AppendLine("Exception in ImageToBitmapSource");
                 sb.AppendLine(err.ToString());
-                File.AppendAllText(desktopPath + "\\screensnippetlogs.txt", sb.ToString());
+                File.AppendAllText(logFilePath, sb.ToString());
                 return null;
             }
         }
